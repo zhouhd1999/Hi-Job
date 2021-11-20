@@ -71,7 +71,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <!-- jar版本冲突检测插件 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
