@@ -15,6 +15,6 @@ spring:
     timeout: 3000ms # 连接超时时间（毫秒）
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://47.110.239.70:3306/test?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    url: jdbc:mysql://47.110.239.70:3306/job?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
     username: root
     password: Zhouhd123456987
