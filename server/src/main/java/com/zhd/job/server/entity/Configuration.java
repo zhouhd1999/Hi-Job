@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Configuration {
-    String clusterName;
-    String hostIp;
-    Integer hostPort;
-    Integer workPoolMaxThread = 100;
-    Integer workPoolMinThread = 1;
+    private String clusterName;
+    private String hostIp;
+    private Integer hostPort;
+    private Integer workPoolMaxThread = 100;
+    private Integer workPoolMinThread = 1;
 }

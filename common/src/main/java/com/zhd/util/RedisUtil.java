@@ -18,16 +18,6 @@ public class RedisUtil {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
-//    /**
-//     * 读取缓存
-//     *
-//     * @param key
-//     * @return
-//     */
-//    public String get(final String key) {
-//        return redisTemplate.opsForValue().get(key);
-//    }
-
     /**
      * 向redis中存放字符串
      * @param key
