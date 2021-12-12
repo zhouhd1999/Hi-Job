@@ -64,13 +64,10 @@ public class HiJobServiceGrpcImpl extends HiJobWorkerGrpc.HiJobWorkerImplBase im
                 // 更新失败，尝试重新加锁
                 if (!ret) {
                     log.warn("lost cluster lock, try to relock");
-
-                    // todo
-                    ret = redisUtil.expire(lockName, expireMs);
-                    //
+                    ret = redisUtil.setAndExpire(lockName, expireMs);
+                    // 重新加锁失败，从主节点降级为从节点
                     if (!ret) {
                         log.warn("lost cluster lock, really");
-
                         hasFetchLock = false;
                         onClusterLockChanged();
                         return;
@@ -78,12 +75,13 @@ public class HiJobServiceGrpcImpl extends HiJobWorkerGrpc.HiJobWorkerImplBase im
                     log.info("Get locker again");
                 }
             } else {
-                // todo
-                ret = redisUtil.expire(lockName, expireMs);
+                // 此时为从节点，没有集群锁，尝试加锁
+                ret = redisUtil.setAndExpire(lockName, expireMs);
+                // 加锁失败，依旧为从节点
                 if (!ret) {
                     return;
                 }
-                // 加锁成功，升级为leader
+                // 加锁成功，升级为主节点
                 hasFetchLock = true;
                 onClusterLockChanged();
             }

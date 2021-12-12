@@ -9,5 +9,4 @@ public interface Job {
     void run();
     Boolean isFinished();
     Integer getProcess();
-
 }
