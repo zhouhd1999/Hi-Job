@@ -43,7 +43,7 @@ public class HiJobServiceGrpcImpl extends HiJobWorkerGrpc.HiJobWorkerImplBase im
 
         onClusterLockChanged();
 
-        // 启动一个定时器，定时获取集群锁，若获取到集群锁则为leader模式，未获取到为LocalClient模式
+        // 启动一个定时器，定时获取集群锁，若获取到集群锁则为主节点，未获取到为从节点
         startTimer();
 
         return true;
@@ -72,7 +72,7 @@ public class HiJobServiceGrpcImpl extends HiJobWorkerGrpc.HiJobWorkerImplBase im
                         onClusterLockChanged();
                         return;
                     }
-                    log.info("Get locker again");
+                    log.info("get locker again");
                 }
             } else {
                 // 此时为从节点，没有集群锁，尝试加锁
@@ -103,7 +103,19 @@ public class HiJobServiceGrpcImpl extends HiJobWorkerGrpc.HiJobWorkerImplBase im
         }
     }
 
-    private void startLeader() {
+    private Boolean startLeader() {
+        log.info("start as leader");
+        String leaderKey = getLeaderKey(configuration.getClusterName());
+
+        String host = configuration.getHostIp() + ":" + configuration.getHostPort();
+        log.info("leader host is " + host);
+
+        // 设置Redis  key：集群名称 value：ip:port
+        redisUtil.set(leaderKey, host);
+
+        // todo
+
+        return true;
     }
 
     private void stopClient() {
@@ -112,6 +124,11 @@ public class HiJobServiceGrpcImpl extends HiJobWorkerGrpc.HiJobWorkerImplBase im
 
     private String getLeaderClusterLockerKey(String clusterName) {
         return clusterName + "-job-leader-lock";
+    }
+
+    private String getLeaderKey(String clusterName)
+    {
+        return clusterName + "-job-leader";
     }
 }
 
